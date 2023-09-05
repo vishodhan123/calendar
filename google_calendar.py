@@ -12,7 +12,7 @@ from googleapiclient.errors import HttpError
 SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 
-def my_calendar():
+def my_calender():
     """
    Create the events
     """
@@ -42,7 +42,7 @@ def my_calendar():
         end_time = start_time + timedelta(hours=4)
 
         event = {
-            'summary': 'Meeting with blinctrip',
+            'summary': 'Meeting with blinctrip team',
             'location': 'Hyderabad',
             'description': 'discussion',
             'start': {
@@ -59,19 +59,20 @@ def my_calendar():
         print("Event created with current time:", start_time.strftime("%Y-%m-%dT%H:%M:%S"))
         print("Event details:", event)
         print(create_event['htmlLink'])
-    #         events = events_result.get('items', [])
 
-    #         if not events:
-    #             print('No upcoming events found.')
-    #             return
+        calendar_id = 'primary'  # 'primary' represents the default calendar of the authenticated user
+        events_result = service.events().list(calendarId=calendar_id, maxResults=10).execute()
+        events = events_result.get('items', [])
 
-    #         # Prints the start and name of the next 10 events
-    #         for event in events:
-    #             start = event['start'].get('dateTime', event['start'].get('date'))
-    #             print(start, event['summary'])
-
+        if not events:
+            print('No upcoming events found.')
+        else:
+            print('Upcoming events:')
+            for event in events:
+                start = event['start'].get('dateTime', event['start'].get('date'))
+                print(f"{start} - {event['summary']}")
     except HttpError as error:
         print('An error occurred: %s' % error)
 
 
-my_calendar()
+my_calender()
